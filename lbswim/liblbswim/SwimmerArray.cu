@@ -23,7 +23,8 @@ SwimmerArray::SwimmerArray(const int num_, const CommonParams* p) :
   // pull state to host
   prng.D2H();
 }
-
+#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 600
+#else
 __device__ double atomicAdd(double* address, double val) {
   unsigned long long int* address_as_ull = (unsigned long long int*)address;
   unsigned long long int old = *address_as_ull, assumed;
@@ -38,6 +39,7 @@ __device__ double atomicAdd(double* address, double val) {
   
   return __longlong_as_double(old);
 }
+#endif
 
 __device__ void AccumulateDeltaForce(const LatticeAddressing* addr, double* lat_force, double* r, double* F) {
   const int* n = addr->size;

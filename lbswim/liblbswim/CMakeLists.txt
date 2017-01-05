@@ -1,6 +1,6 @@
 find_package(CUDA REQUIRED)
 
-set(LBSWIMMERS_NVCC_ARCH_FLAGS "-arch=compute_30 -code=compute_30"
+set(LBSWIMMERS_NVCC_ARCH_FLAGS "-arch=compute_35 -code=sm_35,sm_37"
   CACHE string "CUDA architecture flags")
 
 set(CUDA_NVCC_FLAGS "${LBSWIMMERS_NVCC_ARCH_FLAGS}"
