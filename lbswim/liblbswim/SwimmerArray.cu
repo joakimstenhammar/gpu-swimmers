@@ -180,7 +180,7 @@ __global__ void DoSwimmerArrayMove(const int nSwim,
     // We'll do the norm below.
     for (int d=0; d<DQ_d; d++) {
       newn[d] = curand_normal_double(swim_prng + iSwim);
-      norm += newn[d]*newn[d];
+      norm = newn[d]*newn[d];
     }
 
   } else {
@@ -200,7 +200,7 @@ __global__ void DoSwimmerArrayMove(const int nSwim,
     
     for (int d=0; d<DQ_d; d++) {
       newn[d] =  swim_n[nSwim*d + iSwim] + nDot[d];
-      norm += newn[d]*newn[d];
+      norm = newn[d]*newn[d];
     }
   }
 

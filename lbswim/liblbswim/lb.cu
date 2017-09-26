@@ -66,9 +66,9 @@ Lattice::Lattice(int nx, int ny, int nz, double tau_s, double tau_b) : time_step
 Lattice::~Lattice() {
   delete data;}
 
-__constant__ double DQ_delta[DQ_d][DQ_d] = {{1.0, 0.0, 0.0},
-					    {0.0, 1.0, 0.0},
-					    {0.0, 0.0, 1.0}};
+__constant__ double DQ_delta[DQ_d][DQ_d] = {{1.0/DQ_d, 0.0, 0.0},
+					    {0.0, 1.0/DQ_d, 0.0},
+					    {0.0, 0.0, 1.0/DQ_d}};
 __global__ void DoStep(const LBParams* params,
 		       const LatticeAddressing* addr,
 		       LDView data) {
@@ -171,7 +171,8 @@ __global__ void DoStep(const LBParams* params,
 			  mode[DQ_rho]*(u[a]*u[b] -usq*DQ_delta[a][b]));
       
       /* including traceless force */
-      S[a][b] += 2.*omega_s*tau_s * (u[a]*force[b*nSites + ijk] + force[a*nSites + ijk]*u[b] - 2. * uDOTf * DQ_delta[a][b]);
+/*    S[a][b] += 2.*omega_s*tau_s * (u[a]*force[b*nSites + ijk] + force[a*nSites + ijk]*u[b] - 2. * uDOTf * DQ_delta[a][b]); */ 
+      S[a][b] += omega_s*tau_s * (u[a]*force[b*nSites + ijk] + force[a*nSites + ijk]*u[b] - 2. * uDOTf * DQ_delta[a][b]);   
     }
     /* add the trace back on */
     S[a][a] += TrS / DQ_d;
@@ -353,7 +354,7 @@ __global__ void DoInitFromHydro(const LBParams* params, const LatticeAddressing*
   /* Stress */
   mode[DQ_SXX] = rho[ijk] * u[DQ_X*nSites + ijk] * u[DQ_X*nSites + ijk];
   mode[DQ_SXY] = rho[ijk] * u[DQ_X*nSites + ijk] * u[DQ_Y*nSites + ijk];
-  mode[DQ_SXZ] = rho[ijk] * u[DQ_X*nSites + ijk] * u[DQ_Y*nSites + ijk];
+  mode[DQ_SXZ] = rho[ijk] * u[DQ_X*nSites + ijk] * u[DQ_Z*nSites + ijk];
   
   mode[DQ_SYY] = rho[ijk] * u[DQ_Y*nSites + ijk] * u[DQ_Y*nSites + ijk];
   mode[DQ_SYZ] = rho[ijk] * u[DQ_Y*nSites + ijk] * u[DQ_Z*nSites + ijk];
