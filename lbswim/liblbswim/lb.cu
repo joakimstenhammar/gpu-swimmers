@@ -171,7 +171,6 @@ __global__ void DoStep(const LBParams* params,
 			  mode[DQ_rho]*(u[a]*u[b] -usq*DQ_delta[a][b]));
       
       /* including traceless force */
-/*    S[a][b] += 2.*omega_s*tau_s * (u[a]*force[b*nSites + ijk] + force[a*nSites + ijk]*u[b] - 2. * uDOTf * DQ_delta[a][b]); */ 
       S[a][b] += omega_s*tau_s * (u[a]*force[b*nSites + ijk] + force[a*nSites + ijk]*u[b] - 2. * uDOTf * DQ_delta[a][b]);   
     }
     /* add the trace back on */
